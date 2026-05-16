@@ -23,10 +23,10 @@
   ],
   "name":"spr_room_transitioner",
   "nineSlice":null,
-  "origin":0,
+  "origin":4,
   "parent":{
-    "name":"cubic_wizard",
-    "path":"cubic_wizard.yyp",
+    "name":"editor",
+    "path":"folders/Sprites/editor.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

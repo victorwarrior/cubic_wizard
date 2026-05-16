@@ -43,7 +43,7 @@ do {
 					break;
 				case GUI_ACTIONS.SPELL:
 					state = STATE.RECITE;
-					letters_recited = array_create();
+					letters_recited = array_create(0);
 					current_letter = -1;
 					break;
 			}
@@ -53,7 +53,7 @@ do {
 	} else if (state == STATE.BOOK) {
 		// exit
 		if (input_exit()) {
-			state = STATE.SELECTING_ACTION;
+			state = STATE.CHECK_FOR_INPUT;
 		}
 
 		// navigate spellbook gui
@@ -67,24 +67,10 @@ do {
 				loop_game_state = true;
 			}
 		}
-		/*
-		if (number_of_unlocked_spells != 0) {
-			if (input_up())   gui_book_selected = (gui_book_selected+1) mod number_of_unlocked_spells;
-			if (input_down()) gui_book_selected = (gui_book_selected != 0) ? gui_book_selected-1 : number_of_unlocked_spells-1;
-		}
-		
-		if (input_select()) {
-			spell_to_be_performed = ds_list_find_value(unlocked_spells_list, gui_book_selected);
-			state = STATE.PERFORM_SPELL;
-			loop_game_state = true;
-		}
-		*/
-
 	} else if (state == STATE.RECITE) {
 		// exit
 		if (input_exit()) {
-			state = STATE.SELECTING_ACTION;
-			//letters_recited 
+			state = STATE.CHECK_FOR_INPUT;
 		}
 		// attempt casting
 		if (input_select()) {
@@ -103,6 +89,21 @@ do {
 				state = STATE.CHECK_FOR_INPUT;
 			}
 		}
+		// undo/redo
+		if (input_undo()) {
+			if (current_letter != -1) {
+				current_letter = -1;
+			} else if (array_length(letters_recited) != 0) {
+				array_pop(letters_recited);
+				current_letter = -1;
+				show_debug_message("pop");
+			}
+		}
+		if (input_restart()) {
+			letters_recited = array_create(0);
+			current_letter = -1;
+		}
+		
 		// write
 		var dir = -1;
 		if (input_up())    dir = LETTER.U;
@@ -169,6 +170,8 @@ do {
 		switch (spell_to_be_performed) {
 			case SPELLS.RETURN:
 				if (room != rm_forest_1) {
+					money += lent_money;
+					lent_money = 0;
 					room_goto(rm_forest_1);				
 				}
 				break;
@@ -185,29 +188,81 @@ do {
 	} else if (state == STATE.MOVEMENT) {
 		// move until collision
 		if (player_collision(x_dir, y_dir, spd) == false) {
+			// move
 			obj_player.x += x_dir * spd;
 			obj_player.y += y_dir * spd;
+
+			// room transition
 			var xx_dir = x_dir,    yy_dir = y_dir;
 			var xx = obj_player.x, yy = obj_player.y;
-			var success = false;
+			var teleport_success = false;
+			var room_transitioner = noone;
 			with (obj_player) {
-				var room_transitioner = instance_place(x, y, obj_room_transitioner);
+				room_transitioner = instance_place(x, y, obj_room_transitioner)
 				if (room_transitioner != noone) {
-					if      (xx_dir ==  1) xx = 0;
-					else if (xx_dir == -1) xx = room_width-1;
-					if      (yy_dir ==  1) yy = 0;
-					else if (yy_dir == -1) yy = room_height-1;
 					if (room_transitioner.destination != noone) {
-						room_goto(room_transitioner.destination);
-						success = true;
+						if (room_transitioner.dest_x == -1) {
+							if      (xx_dir ==  1) xx = 0;
+							else if (xx_dir == -1) xx = room_width-1;
+						} else {
+							xx = room_transitioner.dest_x;
+						}
+						if (room_transitioner.dest_y == -1) {
+							if      (yy_dir ==  1) yy = 0;
+							else if (yy_dir == -1) yy = room_height-1;
+						} else {
+							yy = room_transitioner.dest_y;	
+						}
+						teleport_success = true;
 					}
 				}
 			}
-			if (success) {
+			if (teleport_success) {
+				money += lent_money;
+				lent_money = 0;
+				room_goto(room_transitioner.destination);
 				teleport_x = xx;
 				teleport_y = yy;
 				alarm[0] = 1;
-			}				
+			}
+			
+			// key pickup
+			var key_pickup_success = false;
+			with (obj_player) {
+				var key = instance_place(x, y, obj_key);
+				if (key != noone) {
+					key_pickup_success = true;
+					instance_destroy(key);
+				}
+			}
+			if (key_pickup_success) got_a_key = true;
+			
+			// money pickup
+			var money_pickup_amount = 0;
+			with (obj_player) {
+				var money_object = instance_place(x, y, obj_money);
+				if (money_object != noone) {
+					money_pickup_amount = 50;
+					instance_destroy(money_object);
+				}
+			}
+			lent_money += money_pickup_amount;
+			
+			// spike death
+			var death = false;
+			with (obj_player) {
+				var spike = instance_place(x, y, obj_spike);
+				if (spike != noone) {
+					death = true;			
+				}
+			}
+			if (death) {
+				room_persistent = false;
+				lent_money = 0;
+				room_restart();
+				alarm[1] = 1;
+			}
+			
 		} else {
 			state = STATE.CHECK_FOR_INPUT;
 			x_dir = 0;

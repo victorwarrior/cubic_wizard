@@ -5,6 +5,7 @@ draw_rectangle(0, (room_height-1 - SIZES.GUI_HEIGHT), room_width-1, room_height-
 // icons
 if (state == STATE.CHECK_FOR_INPUT || state == STATE.SELECTING_ACTION || state == STATE.MOVEMENT || state = STATE.RESPONSE) {
 	var icon_color = c_dkgray;
+	var middle = room_height-1 - SIZES.GUI_HEIGHT/2;
 	for (var i = 0; i < GUI_ACTIONS.LENGTH; i++) {
 		if (state == STATE.SELECTING_ACTION) {
 			if (i == gui_actions_selected) {
@@ -19,14 +20,20 @@ if (state == STATE.CHECK_FOR_INPUT || state == STATE.SELECTING_ACTION || state =
 			spr_action_icons,
 			i,
 			(room_width)/2 - (SIZES.ACTION_DIST_FROM_CENTER * GUI_ACTIONS.LENGTH/2) + (SIZES.ACTION_DIST_FROM_CENTER*2)*i - 1,
-			room_height-1 - SIZES.GUI_HEIGHT/2,
+			middle,
 			1,
 			1,
 			0,
 			icon_color,
 			1
-		); 
+		);
 	}
+	//draw_sprite(spr_money_gui, 0, room_width-1, middle);
+	draw_set_font(font_small);
+	draw_set_valign(fa_middle);
+	draw_set_halign(fa_right);
+	draw_set_color(c_white);
+	draw_text(room_width-1, middle+2, string(money + lent_money) + " GOLD");
 } else if (state == STATE.RECITE) {
 	var padding = 1;
 	var letter_w = 5;

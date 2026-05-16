@@ -20,3 +20,6 @@ function input_exit() {
 function input_restart() {
 	return (keyboard_check_pressed(ord("R")));
 }
+function input_undo() {
+	return (keyboard_check_pressed(ord("Z")));	
+}
