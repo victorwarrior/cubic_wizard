@@ -32,8 +32,18 @@ do {
 		}
 	
 		// selecting spell or book
-		if      (input_right()) gui_actions_selected = (gui_actions_selected+1) mod GUI_ACTIONS.LENGTH;
-		else if (input_left())  gui_actions_selected = (gui_actions_selected != 0) ? gui_actions_selected-1 : GUI_ACTIONS.LENGTH-1;
+		if (input_right()) {
+			gui_actions_selected = (gui_actions_selected+1) mod GUI_ACTIONS.LENGTH;
+			if (gui_actions_selected == GUI_ACTIONS.INTERACT && !npc_is_adjacent) {
+				gui_actions_selected = (gui_actions_selected+1) mod GUI_ACTIONS.LENGTH;
+			}
+		}
+		else if (input_left()) {
+			gui_actions_selected = (gui_actions_selected != 0) ? gui_actions_selected-1 : GUI_ACTIONS.LENGTH-1;
+			if (gui_actions_selected == GUI_ACTIONS.INTERACT && !npc_is_adjacent) {
+				gui_actions_selected = (gui_actions_selected != 0) ? gui_actions_selected-1 : GUI_ACTIONS.LENGTH-1;
+			}
+		}
 		
 		if (input_select()) {
 			switch (gui_actions_selected) {
@@ -45,6 +55,10 @@ do {
 					state = STATE.RECITE;
 					letters_recited = array_create(0);
 					current_letter = -1;
+					break;
+				case GUI_ACTIONS.INTERACT:
+					state = STATE.INTERACT;
+					gui_shop_selected = 0;
 					break;
 			}
 			gui_actions_selected = 0;
@@ -172,6 +186,7 @@ do {
 				if (room != rm_forest_1) {
 					money += lent_money;
 					lent_money = 0;
+					npc_is_adjacent = false;
 					room_goto(rm_forest_1);				
 				}
 				break;
@@ -220,6 +235,7 @@ do {
 			if (teleport_success) {
 				money += lent_money;
 				lent_money = 0;
+				npc_is_adjacent = false;
 				room_goto(room_transitioner.destination);
 				teleport_x = xx;
 				teleport_y = yy;
@@ -262,6 +278,22 @@ do {
 				room_restart();
 				alarm[1] = 1;
 			}
+			// npc is adjacent
+			var adjacent = false;
+			if (instance_exists(obj_merchant)) {
+				with (obj_player) {
+					if (distance_to_object(obj_merchant) <= 1) {
+						adjacent = true;
+					}
+				}
+			}
+			if (adjacent) {
+				npc_is_adjacent = true;	
+				show_debug_message("happening!");
+			} else {
+				npc_is_adjacent = false;
+				show_debug_message("not happening.");
+			}
 			
 		} else {
 			state = STATE.CHECK_FOR_INPUT;
@@ -269,6 +301,44 @@ do {
 			y_dir = 0;
 		}
 
+	} else if (state == STATE.INTERACT) {
+		// exit
+		if (input_exit()) {
+			state = STATE.CHECK_FOR_INPUT;	
+		}
+		
+		// navigate
+		if (input_right()) {
+			gui_shop_selected = (gui_shop_selected+1) mod SHOP_ITEMS.LENGTH;	
+		} else if (input_left()) {
+			gui_shop_selected = (gui_shop_selected != 0) ? gui_shop_selected-1 : SHOP_ITEMS.LENGTH-1;
+		}
+		
+		// select
+		if (input_select()) {
+			for (var i = 0; i < SHOP_ITEMS.LENGTH; i++) {
+				var spell = SPELLS.WIND;
+				if (gui_shop_selected == 0) spell = SPELLS.WIND;
+				if (gui_shop_selected == 1) spell = SPELLS.INVERT;
+				if (!shop_brought[gui_shop_selected] && money >= spell_table[spell, SPELL_ATTRIBUTE.PRICE]) {
+					money -= spell_table[spell, SPELL_ATTRIBUTE.PRICE];
+					shop_brought[gui_shop_selected] = true;
+					// REFACTOR, USED ELSEWHERE
+					if (unlocked_spells[spell] == false) {
+						unlocked_spells[spell] = true;
+						number_of_unlocked_spells++;
+						var temp_list = ds_list_create();
+						for (var i = 0; i < SPELLS.LENGTH; i++) {
+							if (unlocked_spells[i] == false) continue;
+							ds_list_add(temp_list, i);
+						}
+						unlocked_spells_list = temp_list;
+						ds_list_destroy(temp_list);
+					}
+				}
+			}
+		}
+	
 	} else if (state == STATE.RESPONSE) {
 		state = STATE.CHECK_FOR_INPUT;
 	}

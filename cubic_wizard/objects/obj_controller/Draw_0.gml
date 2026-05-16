@@ -68,6 +68,32 @@ if (state == STATE.CHECK_FOR_INPUT || state == STATE.SELECTING_ACTION || state =
 		}
 		xx += padding + spell_w;
 	}
+} else if (state == STATE.INTERACT) {
+	var padding = 1;
+	var spell_w = 11;
+	draw_set_color(make_color_rgb(20, 20, 20));
+	draw_rectangle(room_width/2-1 - 40, room_height/2-1 -40, room_width/2-1 + 40, room_height/2-1 +40, false);
+
+	draw_set_font(font_small);
+	draw_set_valign(fa_middle);
+	draw_set_halign(fa_center);
+	for (var i = 0; i < SHOP_ITEMS.LENGTH; i++) {
+		var xx = room_width/2-1 - spell_w*2 - padding + spell_w*i*3 + padding*i*3;
+		var yy = room_height/2-1;
+		draw_sprite_ext(
+			!(shop_brought[i]) ? spr_spell_icons : spr_spell_icon_empty,
+			(i == 0) ? SPELLS.WIND : SPELLS.INVERT,
+			xx,
+			yy - 20,
+			1,
+			1,
+			0,
+			(i == gui_shop_selected) ? c_white : c_dkgray,
+			1
+		);
+		draw_set_color(c_white);
+		draw_text(xx + spell_w/2, yy + 20, string(spell_table[(i == 0) ? SPELLS.WIND : SPELLS.INVERT, SPELL_ATTRIBUTE.PRICE]));
+	}
 }
 
 											

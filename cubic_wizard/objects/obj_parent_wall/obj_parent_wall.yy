@@ -6,8 +6,8 @@
   "name":"obj_parent_wall",
   "overriddenProperties":[],
   "parent":{
-    "name":"Objects",
-    "path":"folders/Objects.yy",
+    "name":"controllers and parents",
+    "path":"folders/Objects/controllers and parents.yy",
   },
   "parentObjectId":null,
   "persistent":false,

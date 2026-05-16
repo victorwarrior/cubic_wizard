@@ -9,6 +9,7 @@ enum STATE {
 	MOVEMENT,
 	PERFORM_SPELL,
 	BOOK,
+	INTERACT,
 	SELECTING_ACTION,
 	RESPONSE
 }
@@ -17,6 +18,7 @@ enum ACTION {
 }
 enum GUI_ACTIONS {
 	SPELL,
+	INTERACT,
 	BOOK,
 	LENGTH
 }
@@ -28,11 +30,18 @@ enum SPELLS {
 	RETURN,
 	WIND,
 	REVEAL,
+	INVERT,
 	LENGTH
 }
 enum SPELL_ATTRIBUTE {
 	SEQUENCE,
+	PRICE,
 	ICON,
+	LENGTH
+}
+enum SHOP_ITEMS {
+	SPELL_WIND,
+	SPELL_INVERT,
 	LENGTH
 }
 enum LETTER {
@@ -79,9 +88,13 @@ var spell_table_temp;
 spell_table_temp[SPELLS.RETURN][SPELL_ATTRIBUTE.SEQUENCE] = [LETTER.URDL, LETTER.DLU, LETTER.DR, LETTER.LDR, LETTER.RDL, LETTER.DLU];
 spell_table_temp[SPELLS.REVEAL][SPELL_ATTRIBUTE.SEQUENCE] = [LETTER.U, LETTER.U, LETTER.D, LETTER.U, LETTER.D, LETTER.D, LETTER.D, LETTER.U];
 spell_table_temp[SPELLS.WIND][SPELL_ATTRIBUTE.SEQUENCE]   = [LETTER.LURDL, LETTER.DLURD, LETTER.L, LETTER.L, LETTER.L];
+spell_table_temp[SPELLS.WIND][SPELL_ATTRIBUTE.PRICE]      = 100;
+spell_table_temp[SPELLS.INVERT][SPELL_ATTRIBUTE.SEQUENCE] = [LETTER.LUR, LETTER.DLURD, LETTER.L, LETTER.L, LETTER.L];
+spell_table_temp[SPELLS.INVERT][SPELL_ATTRIBUTE.PRICE]    = 200;
 spell_table = spell_table_temp;
 
 unlocked_spells = array_create(SPELLS.LENGTH, false);
+shop_brought = array_create(SHOP_ITEMS.LENGTH, false);
 number_of_unlocked_spells = 0;
 unlocked_spells_list = ds_list_create();
 
@@ -94,6 +107,7 @@ x_dir = 0;
 y_dir = 0;
 teleport_x = 0;
 teleport_y = 0;
+npc_is_adjacent = false;
 
 money = 0;
 lent_money = 0;
