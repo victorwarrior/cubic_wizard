@@ -1,0 +1,1 @@
+draw_sprite(spr_chess_knight, (allied) ? 0 : 1, x, y);

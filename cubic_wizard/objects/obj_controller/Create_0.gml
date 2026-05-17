@@ -18,8 +18,8 @@ enum ACTION {
 }
 enum GUI_ACTIONS {
 	SPELL,
-	INTERACT,
 	BOOK,
+	INTERACT,
 	LENGTH
 }
 enum SIZES {
@@ -105,6 +105,7 @@ spell_to_be_performed = noone;
 state = STATE.CHECK_FOR_INPUT;
 x_dir = 0;
 y_dir = 0;
+latest_dir = -1;
 teleport_x = 0;
 teleport_y = 0;
 npc_is_adjacent = false;
@@ -137,7 +138,7 @@ function player_collision(x_dir, y_dir, spd) {
 		}
 		if (is_door) {
 			if (got_a_key) {
-				instance_destroy(is_door);
+				instance_destroy(wall);
 			} else {
 				collision = true;
 			}
@@ -146,4 +147,16 @@ function player_collision(x_dir, y_dir, spd) {
 		}
 	}
 	return collision;
+}
+
+function room_teleport(rm, restart) {
+	if (restart) {
+		room_persistent = false;
+		alarm[1] = 1;
+	} else {
+		money += lent_money;	
+	}
+	lent_money = 0;
+	npc_is_adjacent = false;
+	room_goto(rm);
 }

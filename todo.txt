@@ -1,7 +1,6 @@
 
 
  - better room saving / persistence
- - merchant functionality
- - icon for interacting? thats locked unless next to an npc
+
 
 

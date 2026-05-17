@@ -11,7 +11,11 @@ if (state == STATE.CHECK_FOR_INPUT || state == STATE.SELECTING_ACTION || state =
 			if (i == gui_actions_selected) {
 				icon_color = c_ltgray;
 			} else {
-				icon_color = c_gray;
+				if (i == GUI_ACTIONS.INTERACT && !npc_is_adjacent) {
+					icon_color = c_dkgray;
+				} else {
+					icon_color = c_gray;
+				}
 			}
 		} else {
 			icon_color = c_dkgray;

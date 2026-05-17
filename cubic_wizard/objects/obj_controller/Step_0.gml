@@ -11,6 +11,10 @@ do {
 		else if (input_right()) x_dir = 1;
 		
 		if (x_dir != 0 || y_dir != 0) {
+			if      (x_dir ==  1) latest_dir = LETTER.R;
+			else if (x_dir == -1) latest_dir = LETTER.L;
+			else if (y_dir == -1) latest_dir = LETTER.U;
+			else if (y_dir ==  1) latest_dir = LETTER.D;
 			//show_debug_message("movement: " + string(x_dir) + ", " + string(y_dir));
 			state = STATE.MOVEMENT;
 			loop_game_state = true;
@@ -167,7 +171,6 @@ do {
 		}
 
 	} else if (state == STATE.PERFORM_SPELL) {
-		show_debug_message("performing spell!");
 		// unlock if new spell
 		if (unlocked_spells[spell_to_be_performed] == false) {
 			unlocked_spells[spell_to_be_performed] = true;
@@ -181,28 +184,119 @@ do {
 			ds_list_destroy(temp_list);
 		}
 		
+		var switch_to_response = false;
 		switch (spell_to_be_performed) {
 			case SPELLS.RETURN:
 				if (room != rm_forest_1) {
-					money += lent_money;
-					lent_money = 0;
-					npc_is_adjacent = false;
-					room_goto(rm_forest_1);				
+					room_teleport(rm_forest_1, false);				
 				}
 				break;
 			case SPELLS.REVEAL:
 				// implement spell here
 				break;
 			case SPELLS.WIND:
-				// implement spell here
+				var check_x = 0;
+				var check_y = 0;
+				switch (latest_dir) {
+					case LETTER.R:
+						check_x = 1;
+						break;
+					case LETTER.L:
+						check_x = -1;
+						break;
+					case LETTER.U:
+						check_y = -1;
+						break;
+					case LETTER.D:
+						check_y = 1;
+						break;						
+				}
+				with (obj_player) {
+					if (place_meeting(
+						x + check_x,
+						y + check_y,
+						obj_parent_wall
+					)) {
+						// wall, push self
+						x -= check_x*6;
+						y -= check_y*6;
+						switch_to_response = true;
+					} else {
+						var pushable = instance_place(
+							x + check_x*6, 
+							y + check_y*6,
+							obj_parent_pushable
+						);
+						if (pushable != noone) {
+							// check for wall or object next to pushable
+							// if there is, push self instead? or no ._.
+							with (pushable) {
+								if (place_meeting(
+									x + check_x,
+									y + check_y,
+									obj_parent_wall
+								)) {
+									// nothing 
+								} else if (place_meeting(
+									x + check_x*6,
+									y + check_y*6,
+									obj_parent_pushable
+								)) {
+									// nothing 
+								} else {
+									x += check_x*6;
+									y += check_y*6;
+									switch_to_response = true;
+								}
+							}
+						}
+					}
+				}				
+				break;
+			case SPELLS.INVERT:
+				var check_x = 0;
+				var check_y = 0;
+				switch (latest_dir) {
+					case LETTER.R:
+						check_x = 1;
+						break;
+					case LETTER.L:
+						check_x = -1;
+						break;
+					case LETTER.U:
+						check_y = -1;
+						break;
+					case LETTER.D:
+						check_y = 1;
+						break;
+				}
+				with (obj_player) {
+					var piece = instance_place(
+						x + check_x*6,
+						y + check_y*6,
+						obj_parent_chess_piece,
+					);
+					if (piece != noone) {
+						piece.allied = !piece.allied;
+						switch_to_response = true;
+					}
+				}
 				break;
 		}
-		state = STATE.CHECK_FOR_INPUT;
+		if (switch_to_response) {
+			state = STATE.RESPONSE;
+		} else {
+			state = STATE.CHECK_FOR_INPUT;
+		}
 		loop_game_state = true;
 
 	} else if (state == STATE.MOVEMENT) {
 		// move until collision
-		if (player_collision(x_dir, y_dir, spd) == false) {
+		if (player_collision(x_dir, y_dir, spd)) {
+			state = STATE.RESPONSE;
+			x_dir = 0;
+			y_dir = 0;
+		} else {
 			// move
 			obj_player.x += x_dir * spd;
 			obj_player.y += y_dir * spd;
@@ -241,7 +335,6 @@ do {
 				teleport_y = yy;
 				alarm[0] = 1;
 			}
-			
 			// key pickup
 			var key_pickup_success = false;
 			with (obj_player) {
@@ -273,10 +366,7 @@ do {
 				}
 			}
 			if (death) {
-				room_persistent = false;
-				lent_money = 0;
-				room_restart();
-				alarm[1] = 1;
+				room_teleport(room, true);
 			}
 			// npc is adjacent
 			var adjacent = false;
@@ -289,16 +379,9 @@ do {
 			}
 			if (adjacent) {
 				npc_is_adjacent = true;	
-				show_debug_message("happening!");
 			} else {
 				npc_is_adjacent = false;
-				show_debug_message("not happening.");
 			}
-			
-		} else {
-			state = STATE.CHECK_FOR_INPUT;
-			x_dir = 0;
-			y_dir = 0;
 		}
 
 	} else if (state == STATE.INTERACT) {
@@ -341,6 +424,34 @@ do {
 	
 	} else if (state == STATE.RESPONSE) {
 		state = STATE.CHECK_FOR_INPUT;
+		for (var i = 0; i < instance_number(obj_parent_chess_piece); i++) {
+			var piece = instance_find(obj_parent_chess_piece, i);
+			switch (object_get_name(piece.object_index)) {
+				case "obj_chess_knight":
+					if (piece.allied) break;
+					for (var j = 0; j < 8; j++) {
+						var death_pos_x = piece.x;
+						var death_pos_y = piece.y;
+						if (j == 0) {death_pos_x += 6; death_pos_y -= 12;}
+						if (j == 1) {death_pos_x += 12; death_pos_y -= 6;}
+						if (j == 2) {death_pos_x += 12; death_pos_y += 6;}
+						if (j == 3) {death_pos_x += 6; death_pos_y += 12;}
+						if (j == 4) {death_pos_x -= 6; death_pos_y += 12;}
+						if (j == 5) {death_pos_x -= 12; death_pos_y += 6;}
+						if (j == 6) {death_pos_x -= 12; death_pos_y -= 6;}
+						if (j == 7) {death_pos_x -= 6; death_pos_y -= 12;}
+						if (obj_player.x == death_pos_x && obj_player.y == death_pos_y) {
+							piece.x = obj_player.x;
+							piece.y = obj_player.y;
+							obj_player.visible = false;
+							alarm[2] = 12;
+						}
+					}
+					break;
+				default:
+					break;
+			}
+		}
 	}
 
 /*
