@@ -58,10 +58,13 @@
     {"name":"inst_398644B0","path":"rooms/rm_forest_1/rm_forest_1.yy",},
     {"name":"inst_135AD7C5","path":"rooms/rm_forest_1/rm_forest_1.yy",},
     {"name":"inst_10716468","path":"rooms/rm_forest_1/rm_forest_1.yy",},
+    {"name":"inst_260B8E29","path":"rooms/rm_forest_1/rm_forest_1.yy",},
   ],
   "isDnd":false,
   "layers":[
-    {"$GMRInstanceLayer":"","%Name":"UI","depth":0,"effectEnabled":true,"effectType":null,"gridX":3,"gridY":3,"hierarchyFrozen":false,"inheritLayerDepth":false,"inheritLayerSettings":false,"inheritSubLayers":true,"inheritVisibility":true,"instances":[],"layers":[],"name":"UI","properties":[],"resourceType":"GMRInstanceLayer","resourceVersion":"2.0","userdefinedDepth":false,"visible":true,},
+    {"$GMRInstanceLayer":"","%Name":"UI","depth":0,"effectEnabled":true,"effectType":null,"gridX":3,"gridY":3,"hierarchyFrozen":false,"inheritLayerDepth":false,"inheritLayerSettings":false,"inheritSubLayers":true,"inheritVisibility":true,"instances":[
+        {"$GMRInstance":"v2","%Name":"inst_260B8E29","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_260B8E29","objectId":{"name":"obj_forest_noise","path":"objects/obj_forest_noise/obj_forest_noise.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":18.0,"y":9.0,},
+      ],"layers":[],"name":"UI","properties":[],"resourceType":"GMRInstanceLayer","resourceVersion":"2.0","userdefinedDepth":false,"visible":true,},
     {"$GMRInstanceLayer":"","%Name":"Invisible","depth":100,"effectEnabled":true,"effectType":null,"gridX":3,"gridY":3,"hierarchyFrozen":false,"inheritLayerDepth":false,"inheritLayerSettings":false,"inheritSubLayers":true,"inheritVisibility":true,"instances":[
         {"$GMRInstance":"v2","%Name":"inst_27ED41E1","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_27ED41E1","objectId":{"name":"obj_room_transitioner","path":"objects/obj_room_transitioner/obj_room_transitioner.yy",},"properties":[
             {"$GMOverriddenProperty":"v1","%Name":"","name":"","objectId":{"name":"obj_room_transitioner","path":"objects/obj_room_transitioner/obj_room_transitioner.yy",},"propertyId":{"name":"destination","path":"objects/obj_room_transitioner/obj_room_transitioner.yy",},"resource":{"name":"rm_forest_2","path":"rooms/rm_forest_2/rm_forest_2.yy",},"resourceType":"GMOverriddenProperty","resourceVersion":"2.0","value":"rm_forest_2",},

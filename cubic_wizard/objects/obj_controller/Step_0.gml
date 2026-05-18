@@ -11,6 +11,7 @@ do {
 		else if (input_right()) x_dir = 1;
 		
 		if (x_dir != 0 || y_dir != 0) {
+			var snd = audio_play_sound(snd_move, 1, false);
 			if      (x_dir ==  1) latest_dir = LETTER.R;
 			else if (x_dir == -1) latest_dir = LETTER.L;
 			else if (y_dir == -1) latest_dir = LETTER.U;
@@ -124,77 +125,93 @@ do {
 		
 		// write
 		var dir = -1;
-		if (input_up())    dir = LETTER.U;
-		if (input_left())  dir = LETTER.L;
-		if (input_down())  dir = LETTER.D;
-		if (input_right()) dir = LETTER.R;
+		var pitch = 1;
+		if (input_up()) {
+			dir = LETTER.U;
+			pitch = 1.4;
+		}
+		if (input_left()) {
+			dir = LETTER.L;
+			pitch = 1.2;
+		}
+		if (input_down()) {
+			dir = LETTER.D;
+			pitch = 0.8;
+		}
+		if (input_right()) {
+			dir = LETTER.R;
+			pitch = 0.6;
+		}
 		
 		if (dir != -1) {
+
 			if      (current_letter == -1) current_letter = dir;
-			else if (current_letter == LETTER.U && dir == LETTER.R) current_letter = LETTER.UR;
-			else if (current_letter == LETTER.U && dir == LETTER.L) current_letter = LETTER.UL;
-			else if (current_letter == LETTER.D && dir == LETTER.R) current_letter = LETTER.DR;
-			else if (current_letter == LETTER.D && dir == LETTER.L) current_letter = LETTER.DL;
-			else if (current_letter == LETTER.L && dir == LETTER.U) current_letter = LETTER.LU;
-			else if (current_letter == LETTER.L && dir == LETTER.D) current_letter = LETTER.LD;
-			else if (current_letter == LETTER.R && dir == LETTER.U) current_letter = LETTER.RU;
-			else if (current_letter == LETTER.R && dir == LETTER.D) current_letter = LETTER.RD;
-			else if (current_letter == LETTER.UR   && dir == LETTER.D) current_letter = LETTER.URD;
-			else if (current_letter == LETTER.URD  && dir == LETTER.L) current_letter = LETTER.URDL;
-			else if (current_letter == LETTER.URDL && dir == LETTER.U) current_letter = LETTER.URDLU;
-			else if (current_letter == LETTER.UL   && dir == LETTER.D) current_letter = LETTER.ULD;
-			else if (current_letter == LETTER.ULD  && dir == LETTER.R) current_letter = LETTER.ULDR;
-			else if (current_letter == LETTER.ULDR && dir == LETTER.U) current_letter = LETTER.ULDRU;
-			else if (current_letter == LETTER.DR   && dir == LETTER.U) current_letter = LETTER.DRU;
-			else if (current_letter == LETTER.DRU  && dir == LETTER.L) current_letter = LETTER.DRUL;
-			else if (current_letter == LETTER.DRUL && dir == LETTER.D) current_letter = LETTER.DRULD;
-			else if (current_letter == LETTER.DL   && dir == LETTER.U) current_letter = LETTER.DLU;
-			else if (current_letter == LETTER.DLU  && dir == LETTER.R) current_letter = LETTER.DLUR;
-			else if (current_letter == LETTER.DLUR && dir == LETTER.D) current_letter = LETTER.DLURD;
-			else if (current_letter == LETTER.LU   && dir == LETTER.R) current_letter = LETTER.LUR;
-			else if (current_letter == LETTER.LUR  && dir == LETTER.D) current_letter = LETTER.LURD;
-			else if (current_letter == LETTER.LURD && dir == LETTER.L) current_letter = LETTER.LURDL;
-			else if (current_letter == LETTER.LD   && dir == LETTER.R) current_letter = LETTER.LDR;
-			else if (current_letter == LETTER.LDR  && dir == LETTER.U) current_letter = LETTER.LDRU;
-			else if (current_letter == LETTER.LDRU && dir == LETTER.L) current_letter = LETTER.LDRUL;
-			else if (current_letter == LETTER.RU   && dir == LETTER.L) current_letter = LETTER.RUL;
-			else if (current_letter == LETTER.RUL  && dir == LETTER.D) current_letter = LETTER.RULD;
-			else if (current_letter == LETTER.RULD && dir == LETTER.R) current_letter = LETTER.RULDR;
-			else if (current_letter == LETTER.RD   && dir == LETTER.L) current_letter = LETTER.RDL;
-			else if (current_letter == LETTER.RDL  && dir == LETTER.U) current_letter = LETTER.RDLU;
-			else if (current_letter == LETTER.RDLU && dir == LETTER.R) current_letter = LETTER.RDLUR;
+			else if (current_letter == LETTER.U && dir == LETTER.R)    {current_letter = LETTER.UR;}
+			else if (current_letter == LETTER.U && dir == LETTER.L)    {current_letter = LETTER.UL;}
+			else if (current_letter == LETTER.D && dir == LETTER.R)    {current_letter = LETTER.DR;}
+			else if (current_letter == LETTER.D && dir == LETTER.L)    {current_letter = LETTER.DL;}
+			else if (current_letter == LETTER.L && dir == LETTER.U)    {current_letter = LETTER.LU;}
+			else if (current_letter == LETTER.L && dir == LETTER.D)    {current_letter = LETTER.LD;}
+			else if (current_letter == LETTER.R && dir == LETTER.U)    {current_letter = LETTER.RU;}
+			else if (current_letter == LETTER.R && dir == LETTER.D)    {current_letter = LETTER.RD;}
+			else if (current_letter == LETTER.UR   && dir == LETTER.D) {current_letter = LETTER.URD;}
+			else if (current_letter == LETTER.URD  && dir == LETTER.L) {current_letter = LETTER.URDL;}
+			else if (current_letter == LETTER.URDL && dir == LETTER.U) {current_letter = LETTER.URDLU; pitch = 1}
+			else if (current_letter == LETTER.UL   && dir == LETTER.D) {current_letter = LETTER.ULD;}
+			else if (current_letter == LETTER.ULD  && dir == LETTER.R) {current_letter = LETTER.ULDR;}
+			else if (current_letter == LETTER.ULDR && dir == LETTER.U) {current_letter = LETTER.ULDRU; pitch = 1.6}
+			else if (current_letter == LETTER.DR   && dir == LETTER.U) {current_letter = LETTER.DRU;}
+			else if (current_letter == LETTER.DRU  && dir == LETTER.L) {current_letter = LETTER.DRUL;}
+			else if (current_letter == LETTER.DRUL && dir == LETTER.D) {current_letter = LETTER.DRULD; pitch = 0.4}
+			else if (current_letter == LETTER.DL   && dir == LETTER.U) {current_letter = LETTER.DLU;}
+			else if (current_letter == LETTER.DLU  && dir == LETTER.R) {current_letter = LETTER.DLUR;}
+			else if (current_letter == LETTER.DLUR && dir == LETTER.D) {current_letter = LETTER.DLURD; pitch = 1.333}
+			else if (current_letter == LETTER.LU   && dir == LETTER.R) {current_letter = LETTER.LUR;}
+			else if (current_letter == LETTER.LUR  && dir == LETTER.D) {current_letter = LETTER.LURD;}
+			else if (current_letter == LETTER.LURD && dir == LETTER.L) {current_letter = LETTER.LURDL; pitch = 1}
+			else if (current_letter == LETTER.LD   && dir == LETTER.R) {current_letter = LETTER.LDR;}
+			else if (current_letter == LETTER.LDR  && dir == LETTER.U) {current_letter = LETTER.LDRU;}
+			else if (current_letter == LETTER.LDRU && dir == LETTER.L) {current_letter = LETTER.LDRUL; pitch = 1.6}
+			else if (current_letter == LETTER.RU   && dir == LETTER.L) {current_letter = LETTER.RUL;}
+			else if (current_letter == LETTER.RUL  && dir == LETTER.D) {current_letter = LETTER.RULD;}
+			else if (current_letter == LETTER.RULD && dir == LETTER.R) {current_letter = LETTER.RULDR; pitch = 0.4}
+			else if (current_letter == LETTER.RD   && dir == LETTER.L) {current_letter = LETTER.RDL;}
+			else if (current_letter == LETTER.RDL  && dir == LETTER.U) {current_letter = LETTER.RDLU;}
+			else if (current_letter == LETTER.RDLU && dir == LETTER.R) {current_letter = LETTER.RDLUR; pitch = 1.333}
 			// starting new letter
 			else {
 				array_push(letters_recited, current_letter);
 				current_letter = dir;
 			}
+			
+			var snd_vocal = audio_play_sound(snd_tone, 1, false);
+			audio_sound_pitch(snd_vocal, pitch);
+
 		}
 
 	} else if (state == STATE.PERFORM_SPELL) {
 		// unlock if new spell
-		if (unlocked_spells[spell_to_be_performed] == false) {
-			unlocked_spells[spell_to_be_performed] = true;
-			number_of_unlocked_spells++;
-			var temp_list = ds_list_create();
-			for (var i = 0; i < SPELLS.LENGTH; i++) {
-				if (unlocked_spells[i] == false) continue;
-				ds_list_add(temp_list, i);
-			}
-			unlocked_spells_list = temp_list;
-			ds_list_destroy(temp_list);
+		if (unlocked_spells[spell_to_be_performed] == false) {			
+			unlock_spell(spell_to_be_performed);
 		}
 		
 		var switch_to_response = false;
 		switch (spell_to_be_performed) {
 			case SPELLS.RETURN:
+				var snd_return = audio_play_sound(snd_spell_return, 1, false);
+				audio_sound_pitch(snd_return, 1);
 				if (room != rm_forest_1) {
 					room_teleport(rm_forest_1, false);				
 				}
 				break;
 			case SPELLS.REVEAL:
 				// implement spell here
+				var snd_reveal = audio_play_sound(snd_spell_reveal, 1, false);
+				audio_sound_pitch(snd_reveal, 1);
 				break;
 			case SPELLS.WIND:
+				var snd_wind = audio_play_sound(snd_spell_wind, 1, false);
+				audio_sound_pitch(snd_wind, 1.5);
 				var check_x = 0;
 				var check_y = 0;
 				switch (latest_dir) {
@@ -254,6 +271,8 @@ do {
 				}				
 				break;
 			case SPELLS.INVERT:
+				var snd_invert = audio_play_sound(snd_spell_invert, 1, false);
+				audio_sound_pitch(snd_invert, 1);
 				var check_x = 0;
 				var check_y = 0;
 				switch (latest_dir) {
@@ -344,18 +363,24 @@ do {
 					instance_destroy(key);
 				}
 			}
-			if (key_pickup_success) got_a_key = true;
+			if (key_pickup_success) {
+				got_a_key = true;
+				var snd_got_key = audio_play_sound(snd_key, 1, false);
+			}
 			
 			// money pickup
 			var money_pickup_amount = 0;
 			with (obj_player) {
 				var money_object = instance_place(x, y, obj_money);
 				if (money_object != noone) {
+					var snd = audio_play_sound(snd_coin, 1, false);
+					audio_sound_pitch(snd, random_range(0.85, 1.15));
 					money_pickup_amount = 50;
 					instance_destroy(money_object);
 				}
 			}
 			lent_money += money_pickup_amount;
+			
 			
 			// spike death
 			var death = false;
@@ -366,6 +391,8 @@ do {
 				}
 			}
 			if (death) {
+				var snd_death = audio_play_sound(snd_move, 1, false);
+				audio_sound_pitch(snd_death, 0.4);
 				room_teleport(room, true);
 			}
 			// npc is adjacent
@@ -408,15 +435,7 @@ do {
 					shop_brought[gui_shop_selected] = true;
 					// REFACTOR, USED ELSEWHERE
 					if (unlocked_spells[spell] == false) {
-						unlocked_spells[spell] = true;
-						number_of_unlocked_spells++;
-						var temp_list = ds_list_create();
-						for (var i = 0; i < SPELLS.LENGTH; i++) {
-							if (unlocked_spells[i] == false) continue;
-							ds_list_add(temp_list, i);
-						}
-						unlocked_spells_list = temp_list;
-						ds_list_destroy(temp_list);
+						unlock_spell(spell);
 					}
 				}
 			}
@@ -445,6 +464,8 @@ do {
 							piece.y = obj_player.y;
 							obj_player.visible = false;
 							alarm[2] = 12;
+							var snd_death = audio_play_sound(snd_move, 1, false);
+							audio_sound_pitch(snd_death, 0.4);
 						}
 					}
 					break;
