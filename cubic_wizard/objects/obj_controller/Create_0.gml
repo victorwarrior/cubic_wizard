@@ -1,9 +1,10 @@
 randomize();
 zoom = 5;
 set_resolution_by_zoom(zoom);
-window_set_caption("AUTO FACE DUNGEON");
+window_set_caption("CUBIC WIZARD PROTOTYPE");
 
 enum STATE {
+	MENU,
 	CHECK_FOR_INPUT,
 	RECITE,
 	MOVEMENT,
@@ -102,7 +103,7 @@ spell_to_be_performed = noone;
 
 
 
-state = STATE.CHECK_FOR_INPUT;
+state = STATE.MENU;
 x_dir = 0;
 y_dir = 0;
 latest_dir = -1;
@@ -120,7 +121,6 @@ gui_actions_selected = 0;
 gui_book_selected = 0;
 
 
-room_goto_next();
 
 
 function player_collision(x_dir, y_dir, spd) {

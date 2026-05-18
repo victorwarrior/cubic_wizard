@@ -3,7 +3,13 @@ var loop_game_state = false;
 
 do {
 */
-	if (state == STATE.CHECK_FOR_INPUT) {
+	if (state == STATE.MENU) {
+		if (input_select()) {
+			room_goto_next();
+			state = STATE.CHECK_FOR_INPUT;
+		}
+	
+	} else if (state == STATE.CHECK_FOR_INPUT) {
 		// checking for movement input
 		if      (input_up())    y_dir = -1;	
 		else if (input_left())  x_dir = -1;
@@ -208,6 +214,13 @@ do {
 				// implement spell here
 				var snd_reveal = audio_play_sound(snd_spell_reveal, 1, false);
 				audio_sound_pitch(snd_reveal, 1);
+				
+				for (var i = 0; i < instance_number(obj_money); i++) {
+					var coins = instance_find(obj_money, i);
+					if (coins != noone) {
+						coins.visible = true;
+					}
+				}
 				break;
 			case SPELLS.WIND:
 				var snd_wind = audio_play_sound(snd_spell_wind, 1, false);

@@ -1,7 +1,20 @@
 
 // foundation
-draw_set_color(make_color_rgb(20, 20, 20));
-draw_rectangle(0, (room_height-1 - SIZES.GUI_HEIGHT), room_width-1, room_height-1, false);
+if (state != STATE.MENU) {
+	draw_set_color(make_color_rgb(20, 20, 20));
+	draw_rectangle(0, (room_height-1 - SIZES.GUI_HEIGHT), room_width-1, room_height-1, false);
+} else {
+	draw_set_color(c_white);
+	draw_set_font(font_big);
+	draw_set_halign(fa_center);
+	draw_text(room_width/2 - 1, 40, "CUBIC WIZARD");
+	draw_set_font(font_small);
+	draw_set_halign(fa_left);
+	draw_text(6, 70, "WASD to move");
+	draw_text(6, 85, "space and ESC to navigate menu");
+	draw_text(6, 100, "Z and R to undo writing");
+	
+}
 // icons
 if (state == STATE.CHECK_FOR_INPUT || state == STATE.SELECTING_ACTION || state == STATE.MOVEMENT || state = STATE.RESPONSE) {
 	var icon_color = c_dkgray;
@@ -23,7 +36,7 @@ if (state == STATE.CHECK_FOR_INPUT || state == STATE.SELECTING_ACTION || state =
 		draw_sprite_ext(
 			spr_action_icons,
 			i,
-			(room_width)/2 - (SIZES.ACTION_DIST_FROM_CENTER * GUI_ACTIONS.LENGTH/2) + (SIZES.ACTION_DIST_FROM_CENTER*2)*i - 1,
+			(room_width)/2 - (SIZES.ACTION_DIST_FROM_CENTER*1.5 * GUI_ACTIONS.LENGTH/2) + (SIZES.ACTION_DIST_FROM_CENTER*2)*i - 1,
 			middle,
 			1,
 			1,

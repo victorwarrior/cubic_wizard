@@ -39,6 +39,7 @@
   },
   "name":"cubic_wizard",
   "resources":[
+    {"id":{"name":"font_big","path":"fonts/font_big/font_big.yy",},},
     {"id":{"name":"font_small","path":"fonts/font_small/font_small.yy",},},
     {"id":{"name":"obj_chess_knight","path":"objects/obj_chess_knight/obj_chess_knight.yy",},},
     {"id":{"name":"obj_controller","path":"objects/obj_controller/obj_controller.yy",},},
@@ -59,6 +60,7 @@
     {"id":{"name":"rm_dungeon_blue_2","path":"rooms/rm_dungeon_blue_2/rm_dungeon_blue_2.yy",},},
     {"id":{"name":"rm_dungeon_blue_3","path":"rooms/rm_dungeon_blue_3/rm_dungeon_blue_3.yy",},},
     {"id":{"name":"rm_dungeon_orange_1","path":"rooms/rm_dungeon_orange_1/rm_dungeon_orange_1.yy",},},
+    {"id":{"name":"rm_dungeon_orange_2","path":"rooms/rm_dungeon_orange_2/rm_dungeon_orange_2.yy",},},
     {"id":{"name":"rm_forest_1","path":"rooms/rm_forest_1/rm_forest_1.yy",},},
     {"id":{"name":"rm_forest_2","path":"rooms/rm_forest_2/rm_forest_2.yy",},},
     {"id":{"name":"rm_init","path":"rooms/rm_init/rm_init.yy",},},
@@ -79,6 +81,7 @@
     {"id":{"name":"spr_bg_dungeon_blue_1","path":"sprites/spr_bg_dungeon_blue_1/spr_bg_dungeon_blue_1.yy",},},
     {"id":{"name":"spr_bg_dungeon_blue_2","path":"sprites/spr_bg_dungeon_blue_2/spr_bg_dungeon_blue_2.yy",},},
     {"id":{"name":"spr_bg_dungeon_blue_3","path":"sprites/spr_bg_dungeon_blue_3/spr_bg_dungeon_blue_3.yy",},},
+    {"id":{"name":"spr_bg_dungeon_orange_1","path":"sprites/spr_bg_dungeon_orange_1/spr_bg_dungeon_orange_1.yy",},},
     {"id":{"name":"spr_bg_forest_1","path":"sprites/spr_bg_forest_1/spr_bg_forest_1.yy",},},
     {"id":{"name":"spr_bg_forest_2","path":"sprites/spr_bg_forest_2/spr_bg_forest_2.yy",},},
     {"id":{"name":"spr_chess_grid","path":"sprites/spr_chess_grid/spr_chess_grid.yy",},},
@@ -113,6 +116,7 @@
     {"roomId":{"name":"rm_dungeon_blue_2","path":"rooms/rm_dungeon_blue_2/rm_dungeon_blue_2.yy",},},
     {"roomId":{"name":"rm_dungeon_blue_3","path":"rooms/rm_dungeon_blue_3/rm_dungeon_blue_3.yy",},},
     {"roomId":{"name":"rm_dungeon_orange_1","path":"rooms/rm_dungeon_orange_1/rm_dungeon_orange_1.yy",},},
+    {"roomId":{"name":"rm_dungeon_orange_2","path":"rooms/rm_dungeon_orange_2/rm_dungeon_orange_2.yy",},},
   ],
   "templateType":"game",
   "TextureGroups":[
