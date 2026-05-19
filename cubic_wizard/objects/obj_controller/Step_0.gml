@@ -312,6 +312,16 @@ do {
 						piece.allied = !piece.allied;
 						switch_to_response = true;
 					}
+					var merchant = instance_place(
+						x + check_x*6,
+						y + check_y*6,
+						obj_merchant,
+					);
+					if (merchant != noone) {
+						with (merchant) {
+							image_index = (image_index+1) mod 2;	
+						}
+					}
 				}
 				break;
 		}
@@ -443,7 +453,8 @@ do {
 				var spell = SPELLS.WIND;
 				if (gui_shop_selected == 0) spell = SPELLS.WIND;
 				if (gui_shop_selected == 1) spell = SPELLS.INVERT;
-				if (!shop_brought[gui_shop_selected] && money >= spell_table[spell, SPELL_ATTRIBUTE.PRICE]) {
+				if (!shop_brought[gui_shop_selected] && (money+lent_money) >= spell_table[spell, SPELL_ATTRIBUTE.PRICE]) {
+					money += lent_money;
 					money -= spell_table[spell, SPELL_ATTRIBUTE.PRICE];
 					shop_brought[gui_shop_selected] = true;
 					// REFACTOR, USED ELSEWHERE
