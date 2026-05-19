@@ -1,7 +1,7 @@
 randomize();
 zoom = 6;
 set_resolution_by_zoom(zoom);
-window_set_caption("CUBIC WIZARD");
+window_set_caption("CUBIC WIZARD PROTOTYPE");
 
 enum STATE {
 	MENU,

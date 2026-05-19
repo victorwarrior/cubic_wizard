@@ -7,7 +7,8 @@ if (state != STATE.MENU) {
 	draw_set_color(c_white);
 	draw_set_font(font_big);
 	draw_set_halign(fa_center);
-	draw_text(room_width/2 - 1, 40, "CUBIC WIZARD");
+	draw_text(room_width/2 - 1, 30, "CUBIC WIZARD");
+	draw_text(room_width/2 - 1, 45, "PROTOTYPE");
 	draw_set_font(font_small);
 	draw_set_halign(fa_left);
 	draw_text(6, 70, "WASD to move");
@@ -109,7 +110,8 @@ if (state == STATE.CHECK_FOR_INPUT || state == STATE.SELECTING_ACTION || state =
 			1
 		);
 		draw_set_color(c_white);
-		draw_text(xx + spell_w/2, yy + 20, string(spell_table[(i == 0) ? SPELLS.WIND : SPELLS.INVERT, SPELL_ATTRIBUTE.PRICE]));
+		draw_text(xx + spell_w/2, yy + 10, string(spell_table[(i == 0) ? SPELLS.WIND : SPELLS.INVERT, SPELL_ATTRIBUTE.PRICE]));
+		draw_text(xx + spell_w/2, yy + 20, "GOLD");
 	}
 }
 
